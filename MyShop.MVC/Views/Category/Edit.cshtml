@@ -1,0 +1,30 @@
+﻿@model Category
+
+@{
+    ViewBag.PageTitle = "Category Managment";
+    ViewBag.CartTitle = "Edit Category";
+
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+    <div class="mb-3">
+        <button class="btn btn-success" type="submit">Edit</button>
+        <a asp-action="Index" asp-controller="Category" class="btn btn-warning">Back To Index</a>
+    </div>
+</form>
+
+@section scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+}
