@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using MyShop.Web.Data;
+using Microsoft.Extensions.DependencyInjection;
+using MyShop.DataAccess;
+using MyShop.DataAccess.Implementations;
+using MyShop.Entities.Repositories;
+
 
 namespace MyShop.MVC
 {
@@ -15,6 +19,11 @@ namespace MyShop.MVC
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
             builder.Configuration.GetConnectionString("DefaultConnection")
             )) ;
+
+
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
             var app = builder.Build();
 
@@ -35,7 +44,7 @@ namespace MyShop.MVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Admin}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
