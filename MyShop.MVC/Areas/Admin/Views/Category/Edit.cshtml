@@ -4,12 +4,12 @@
     ViewBag.PageTitle = "Category Managment";
     ViewBag.CartTitle = "Edit Category";
 
-    Layout = "~/Views/Shared/_Dashboard.cshtml";
+  
 }
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
+     <div class="mb-3">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span class="text-danger" asp-validation-for="Name"></span>

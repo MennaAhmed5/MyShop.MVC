@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using MyShop.DataAccess;
 using MyShop.DataAccess.Implementations;
 using MyShop.Entities.Repositories;
+using Microsoft.AspNetCore.Identity;
+using MyShop.Utilities;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 namespace MyShop.MVC
@@ -20,10 +23,17 @@ namespace MyShop.MVC
             builder.Configuration.GetConnectionString("DefaultConnection")
             )) ;
 
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+                options=>options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(4)
+                ).AddDefaultUI()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddSingleton<IEmailSender,EmailSender>();   
 
             var app = builder.Build();
 
@@ -41,10 +51,15 @@ namespace MyShop.MVC
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{area=Admin}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Admin}/{controller=Home}/{action=Index}/{id?}"
+            );
+            app.MapControllerRoute(
+               name: "customer",
+               pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
+           );
 
             app.Run();
         }

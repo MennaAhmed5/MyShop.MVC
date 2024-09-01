@@ -14,11 +14,14 @@ namespace MyShop.DataAccess.Implementations
 
         public IProductRepository Product { get; private set; }
 
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+
         public UnitOfWork(ApplicationDbContext context)  
         {
             _context = context;
             Category = new CategoryRepository(context);
-            Product = new ProductRepository(context);   
+            Product = new ProductRepository(context); 
+            ShoppingCart = new ShoppingCartRepository(context);
         }
         
 
