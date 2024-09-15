@@ -16,12 +16,20 @@ namespace MyShop.DataAccess.Implementations
 
         public IShoppingCartRepository ShoppingCart { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext context)  
+        public IOrderHeaderRepository OrderHeader { get; private set; }
+
+        public  IOrderDetailRepository OrderDetail { get; private set; }
+
+ 
+ 
+		public UnitOfWork(ApplicationDbContext context)  
         {
             _context = context;
             Category = new CategoryRepository(context);
             Product = new ProductRepository(context); 
             ShoppingCart = new ShoppingCartRepository(context);
+            OrderHeader = new OrderHeaderRepository(context);
+            OrderDetail = new OrderDetailRepository(context);
         }
         
 

@@ -20,12 +20,12 @@ namespace MyShop.Web.Areas.Customer.Controllers
             return View(products);
         }
         [HttpGet]
-        public IActionResult Details(int productId)
+        public IActionResult Details(int ProductId)
         {
             ShoppingCart obj = new ShoppingCart()
             {
-                ProductId = productId,
-                Product = _unitOfWork.Product.GetFirstOrDefault(x => x.Id == productId, includeword: "Category"),
+                ProductId = ProductId,
+                Product = _unitOfWork.Product.GetFirstOrDefault(x => x.Id == ProductId, includeword: "Category"),
                 Count = 1,
                 
             };
@@ -40,7 +40,20 @@ namespace MyShop.Web.Areas.Customer.Controllers
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
             shoppingCart.ApplicationUserId = claim.Value;
-            _unitOfWork.ShoppingCart.Add(shoppingCart);
+
+            ShoppingCart Cartobj = _unitOfWork.ShoppingCart.GetFirstOrDefault(
+             u => u.ApplicationUserId == claim.Value && u.ProductId == shoppingCart.ProductId
+             );
+
+            if ( Cartobj == null )
+            {
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+
+            }
+            else
+            {
+                _unitOfWork.ShoppingCart.IncreaseCount(Cartobj, shoppingCart.Count);
+            }
             _unitOfWork.complete();
             return RedirectToAction("Index"); 
         }

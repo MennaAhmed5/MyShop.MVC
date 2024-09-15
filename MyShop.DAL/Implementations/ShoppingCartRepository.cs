@@ -16,6 +16,16 @@ namespace MyShop.DataAccess.Implementations
             _context = context;
         }
 
-        
+        public int DecreaseCount(ShoppingCart shoppingCart, int Count)
+        {
+            shoppingCart.Count -= Count;
+            return shoppingCart.Count;
+        }
+
+        public int IncreaseCount(ShoppingCart shoppingCart, int Count)
+        {
+            shoppingCart.Count += Count;
+            return shoppingCart.Count;
+        }
     }
 }

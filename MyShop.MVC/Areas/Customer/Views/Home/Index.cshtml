@@ -10,7 +10,7 @@
                     <div class="card h-100">
                    
                      <!-- Product image-->
-                        <a href="\customer\Home\Details\@item.Id"> <img class="card-img-top" src="~/@item.Img" alt="..." height="300" width="450" /> </a>
+                        <a  asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-ProductId="@item.Id"> <img class="card-img-top" src="~/@item.Img" alt="..." height="300" width="450" /> </a>
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
