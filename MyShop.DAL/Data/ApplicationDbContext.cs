@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace MyShop.DataAccess
 {
-    public class ApplicationDbContext: IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext: IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
@@ -20,6 +20,6 @@ namespace MyShop.DataAccess
 
         public DbSet<OrderHeader> OrderHeaders { get; set; }
 
-        public DbSet<OrderDetail> OrderDetails { get; set; }    
+        public DbSet<OrderDetail> OrderDetails { get; set; }
     }
 }

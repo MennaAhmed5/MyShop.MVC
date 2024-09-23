@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Product>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
@@ -10,7 +12,7 @@
                     <div class="card h-100">
                    
                      <!-- Product image-->
-                        <a  asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-ProductId="@item.Id"> <img class="card-img-top" src="~/@item.Img" alt="..." height="300" width="450" /> </a>
+                        <a asp-action="Details" asp-route-productId="@item.Id"> <img class="card-img-top" src="~/@item.Img" alt="..." height="300" width="450" /> </a>
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
@@ -25,12 +27,23 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" asp-action="Details" asp-route-productId="@item.Id">View Details</a></div>
                     </div>
                 </div>
             </div>
-              }
-             
+              }           
+       </div>
+
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                @Html.PagedListPager((IPagedList) Model, page=> Url.Action("Index", new{page = page}),
+                   new PagedListRenderOptions
+                   {
+                      LiElementClasses = new string[]{"paged-item"},
+                      PageClasses = new string[]{"page-link"}
+                   })
         </div>
-    </div>
+        </div>
+     </div>
 </section>

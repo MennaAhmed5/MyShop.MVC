@@ -6,6 +6,9 @@ using MyShop.Entities.Repositories;
 using Microsoft.AspNetCore.Identity;
 using MyShop.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Stripe;
+using MyShop.Entities.Models;
+using MyShop.DataAccess.DbIntializer;
 
 
 namespace MyShop.MVC
@@ -23,18 +26,20 @@ namespace MyShop.MVC
             builder.Configuration.GetConnectionString("DefaultConnection")
             )) ;
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+            builder.Services.Configure<StripeData>(builder.Configuration.GetSection("stripe"));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
                 options=>options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(4)
                 ).AddDefaultUI()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-
+            builder.Services.AddSingleton<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddSingleton<IEmailSender,EmailSender>();   
-
+            builder.Services.AddScoped<IDbIntializer, DbIntializer>();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,7 +55,11 @@ namespace MyShop.MVC
 
             app.UseRouting();
 
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("stripe:SecretKey").Get<string>();
+           // SeedDb();
             app.UseAuthorization();
+
+            app.UseSession();
             app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
@@ -62,6 +71,15 @@ namespace MyShop.MVC
            );
 
             app.Run();
+
+            void SeedDb()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var dbIntializer = scope.ServiceProvider.GetRequiredService<IDbIntializer>();
+                    dbIntializer.intialize();
+                }
+            }
         }
     }
 }

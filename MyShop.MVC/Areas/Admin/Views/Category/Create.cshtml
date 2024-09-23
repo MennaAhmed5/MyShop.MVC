@@ -6,7 +6,8 @@
 
     
 }
-
+<div class="row">
+    <div class="col-md-4">
 <form asp-action="Create" method="post">
     <div class="mb-3">
         <label asp-for="Name"></label>
@@ -15,7 +16,7 @@
      </div>
     <div class="mb-3">
         <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
+        <textarea id="mytextarea"  asp-for="Description" class="form-control"></textarea>
         <span class="text-danger" asp-validation-for="Description"></span>
     </div>
     <div class="mb-3">
@@ -23,7 +24,13 @@
         <a asp-action="Index" asp-controller="Category" class="btn btn-warning">Back To Index</a>
     </div>
 </form>
-
+    </div>
+</div>
 @section scripts{
     <partial name="_ValidationScriptsPartial"></partial>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 }

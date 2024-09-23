@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MyShop.Entities.Models;
 using MyShop.Entities.Repositories;
+using MyShop.Utilities;
 using System.Security.Claims;
+using X.PagedList;
+
 
 namespace MyShop.Web.Areas.Customer.Controllers
 {
@@ -14,9 +17,12 @@ namespace MyShop.Web.Areas.Customer.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            var products = _unitOfWork.Product.GetAll();
+            var PageNumber = page ?? 1;
+            int PageSize = 8;
+
+            var products = _unitOfWork.Product.GetAll().ToPagedList(PageNumber, PageSize);
             return View(products);
         }
         [HttpGet]
@@ -48,13 +54,18 @@ namespace MyShop.Web.Areas.Customer.Controllers
             if ( Cartobj == null )
             {
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.complete();
+                HttpContext.Session.SetInt32(SD.SessionKey,
+                    _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == claim.Value).ToList().Count()
+                );
+                
 
             }
             else
             {
                 _unitOfWork.ShoppingCart.IncreaseCount(Cartobj, shoppingCart.Count);
+                _unitOfWork.complete();
             }
-            _unitOfWork.complete();
             return RedirectToAction("Index"); 
         }
     }

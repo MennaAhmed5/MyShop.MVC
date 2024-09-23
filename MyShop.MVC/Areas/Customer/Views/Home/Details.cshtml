@@ -14,7 +14,7 @@
                     <span class="text-decoration-line-through">$45.00</span>
                     <span>@Model.Product.Price</span>
                 </div>
-                <p class="lead"> @Model.Product.Description</p>
+                    <p class="lead"> @Html.Raw(Model.Product.Description)</p>
                 <div class="d-flex">
                     <input class="form-control text-center me-3" id="inputQuantity" asp-for="Count" style="max-width: 3rem" />
                     <button class="btn btn-outline-dark flex-shrink-0" type="submit">
